@@ -1,0 +1,3030 @@
+# content_lists.toml
+# Defines named pools of placeable objects for use in room layouts.
+# Place this file in the same directory as your layout .toml files.
+#
+# Each [[items]] entry is one object. Items sharing the same "list" name
+# are grouped together. Rooms reference lists by name in their TOML:
+#
+#   [[rooms]]
+#   furniture = ["furniture_office", "metal_shelves"]
+#   lights    = ["fluorescent_lights"]
+#
+# ── Placement ────────────────────────────────────────────────────────────────
+# placement = "anywhere"   (default) interior and wall pieces
+# placement = "walls"      wall pieces only, item auto-rotates to face inward
+# placement = "interior"   non-perimeter interior pieces only
+# placement = "corners"    corner pieces only, item auto-rotates to face room centre
+#
+# ── Rotation ─────────────────────────────────────────────────────────────────
+# base_rot  = [rx, ry, rz]   fixed correction in radians (default: [0,0,0])
+#                             e.g. base_rot = [1.5708, 0, 0] lays a model flat
+# jitter    = <radians>       max ± random yaw (default: 6.2832 = full random)
+#                             0.0 = locked, 0.7854 = ±45°
+#
+# ── Wall depth ───────────────────────────────────────────────────────────────
+# wall_depth = <units>       distance to push item from the piece centre toward
+#                            the outer wall face. 64 (default) = near the wall
+#                            surface. 0 = piece centre. 128 = at the outer face.
+#
+# ── Z offset ─────────────────────────────────────────────────────────────────
+# z_offset  = <units>        height above floor for the item's reference point
+#
+# ── Companions ───────────────────────────────────────────────────────────────
+# [[items.companions]] places an extra object relative to the parent:
+#   forward    = units along the parent's facing direction
+#   right      = units to the parent's right
+#   rot_offset = yaw in radians relative to parent (3.141593 = PI = face parent)
+#
+# ── Surface scatter ───────────────────────────────────────────────────────────
+# [[items.surface_scatter]] scatters random items from a pool on the parent's
+# surface. Items are drawn from the named list and placed within the zone.
+#   list     = name of the content list to draw from
+#   count    = number of items to place (default: 1)
+#   z_offset = absolute surface height above the floor
+#   x_range  = half-width of scatter zone along the wall (parent's right axis)
+#   y_range  = half-depth of scatter zone into the room (parent's forward axis)
+#
+# ── Form IDs ─────────────────────────────────────────────────────────────────
+# Hex literals are supported: form_id = 0x000CCF93
+# High byte 0x00 = FalloutNV.esm (base game). Verify FormIDs in FNVEdit.
+
+# ── Kits ─────────────────────────────────────────────────────────────────────
+# Each [[kits]] entry defines the structural FormIDs for one room kit.
+# Reference a kit in a layout TOML with:  kit = "office"
+#
+# All FormIDs are from FalloutNV.esm (high byte 0x00 = base game).
+# Verify IDs in FNVEdit.
+# Optional fields: acoustic_space, music_type, image_space, corridor_*.
+# Omit corridor_* fields entirely if the kit has no hallway mesh variants;
+# using such a kit for a corridor room (width=1 or length=1) will abort with an error.
+#
+# Per-piece-family rotation adjustments (all optional, default 0.0 unless noted):
+#
+# room_mid_rot_adj       = <radians>   extra yaw for interior floor pieces
+# wall_straight_rot_adj  = <radians>   extra yaw for wall_straight pieces
+# wall_corner_rot_adj    = <radians>   extra yaw for all corner pieces
+# corridor_rot_adj       = <radians>   extra yaw for all corridor pieces (entrance, middle, terminal)
+#
+# wall_doorway_rot_adj   = <radians>
+#   Extra rotation applied to wall_doorway pieces ON TOP OF wall_straight_rot_adj.
+#   Default 1.5708 (PI/2) matches the office kit (doorway mesh is 90° CCW of wall_straight).
+#   Set to 0.0 if the kit's doorway mesh is already aligned with wall_straight.
+#   Common values: 0.0, 1.5708 (PI/2), 3.1416 (PI), 4.7124 (3PI/2)
+
+[[kits]]
+name        = "office"
+description = "Administrative office, cubicles, filing rooms"
+room_height             = 128.0
+room_mid                = 0x000159DF
+wall_straight           = 0x000159E0
+wall_corner_inner       = 0x000159DD
+wall_corner_door_l      = 0x000159D5
+wall_corner_door_r      = 0x000159D6
+wall_doorway            = 0x000159E1
+corridor                = 0x000159DB
+corridor_entrance       = 0x000159DC
+corridor_entrance_left  = 0x000159BA
+corridor_entrance_right = 0x000159BB
+corridor_terminal       = 0x000159B9
+corridor_terminal_rot_adj = 3.14159
+corridor_terminal_offset = 64.0
+door                    = 0x00019CF5
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "office_red"
+description = "Administrative office with red carpet"
+room_height             = 128.0
+room_mid                = 0x00113C65
+wall_straight           = 0x000B0CEB
+wall_corner_inner       = 0x000B0CE4
+wall_corner_door_l      = 0x000EF681
+wall_corner_door_r      = 0x000EF680
+wall_doorway            = 0x000B0CDF
+corridor                = 0x000B0CC6
+corridor_entrance       = 0x000B0CDB
+corridor_entrance_left  = 0x000B0CEF
+corridor_entrance_right = 0x000B0CF0
+corridor_terminal       = 0x000B0CCB
+corridor_terminal_rot_adj = 3.14159
+corridor_terminal_offset = 64.0
+door                    = 0x000B0CD4
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "factory"
+description = "Industrial floor, catwalks, machinery"
+room_height             = 192.0
+room_mid                = 0x00018EF9
+wall_straight           = 0x00018EFD
+wall_corner_inner       = 0x00018E97
+wall_corner_door_l      = 0x00018E9A
+wall_corner_door_r      = 0x00018E9B
+corridor                = 0x00018F8C
+corridor_entrance       = 0x00019009
+corridor_entrance_left  = 0x0001900B
+corridor_entrance_right = 0x00019012
+corridor_terminal       = 0x00019008
+corridor_terminal_rot_adj = 3.14159
+corridor_terminal_offset = 64.0
+door                    = 0x00019CF5
+wall_doorway            = 0x00018F06
+acoustic_space          = 0x0011A3C8
+music_type              = 0x000C8B1B
+
+[[kits]]
+name        = "hotel"
+description = "Hotel rooms, lobbies, modest interiors"
+room_height             = 128.0
+room_mid                = 0x001131CA
+wall_straight           = 0x001131CD
+wall_corner_inner       = 0x001131BE
+wall_corner_door_l      = 0x001131C0
+wall_corner_door_r      = 0x001131C1
+wall_doorway            = 0x001131CF
+corridor                = 0x00113199
+corridor_entrance       = 0x0011319F
+corridor_entrance_left  = 0x001131A1
+corridor_entrance_right = 0x001131A2
+corridor_terminal       = 0x0011319F
+door                    = 0x000B0CD4
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "utility"
+description = "Utility/maintenance corridors and service rooms"
+room_height             = 128.0
+room_mid                = 0x0002EB85
+wall_straight           = 0x0002EB86
+wall_corner_inner       = 0x0002F8B0
+wall_corner_door_l      = 0x0002F8B7
+wall_corner_door_l_rot_adj = -1.5708
+wall_corner_door_r      = 0x0002F8B6
+wall_doorway            = 0x0002EB87
+wall_doorway_rot_adj    = 0.0
+corridor                = 0x000288C5
+corridor_entrance       = 0x00028151
+corridor_entrance_left  = 0x0002D250
+corridor_entrance_right = 0x0002D251
+corridor_terminal       = 0x0002D252
+corridor_terminal_rot_adj = 3.14159
+corridor_terminal_offset = 256.0
+door                    = 0x0003940E
+door_rot_adj            = 1.5708
+acoustic_space          = 0x0011A3C9
+music_type              = 0x000C8B1C
+
+[[kits]]
+name        = "neo"
+description = "Neo-deco / retro-futurist interiors"
+room_height             = 128.0
+room_mid                = 0x0004B9DF
+wall_straight           = 0x0004B9E4
+wall_corner_inner       = 0x0004B9E3
+wall_corner_door_l      = 0x0004C1AD
+wall_corner_door_r      = 0x0004C1AE
+wall_doorway            = 0x0004B9E5
+wall_doorway_rot_adj    = 0.0        # neo doorway mesh is already aligned with wall_straight
+door                    = 0x000159A6
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "casino_low"
+description = "Casino Low-Tier"
+room_height             = 128.0
+room_mid                = 0x000D73B5
+wall_straight           = 0x000D73B7
+wall_straight_rot_adj   = 1.5708
+wall_corner_inner       = 0x000E3AA1
+wall_corner_door_l      = 0x000E3AA0
+wall_corner_door_l_offset = 16
+wall_corner_door_r      = 0x000E3A9F
+wall_corner_door_r_rot_adj = 1.5708
+wall_doorway            = 0x000E3A99
+wall_doorway_rot_adj    = 0.0
+door                    = 0x000B0CD4
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "casino_high"
+description = "Casino High-Tier"
+room_height             = 128.0
+room_mid                = 0x000D731C
+wall_straight           = 0x000D731A
+wall_straight_rot_adj   = -1.5708
+wall_corner_inner       = 0x000D7323
+wall_corner_door_l      = 0x000D7323 # Does not exist
+wall_corner_door_r      = 0x000D7321
+wall_corner_door_r_rot_adj = 1.5708
+wall_doorway            = 0x000D7318
+wall_doorway_rot_adj    = 3.14159
+door                    = 0x000159A6
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "gamorrah"
+description = "Gamorrah Casino/Hotel"
+room_height             = 128.0
+room_mid                = 0x00118F35
+wall_straight           = 0x00118F38
+wall_corner_inner       = 0x00118F36
+wall_corner_door_l      = 0x00118F3C
+# wall_corner_door_l_rot_adj = 0.0
+wall_corner_door_r      = 0x00118F3A
+wall_corner_door_r_rot_adj = 1.5708
+wall_doorway            = 0x00118F39
+door                    = 0x00126695
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "sarsaparilla_factory"
+description = "Sunset Sarsaparilla Factory"
+room_height             = 128.0
+room_mid                = 0x0010B5D5
+wall_straight           = 0x0010B5D6
+wall_corner_inner       = 0x0010B5C6
+wall_corner_door_l      = 0x0010B5C7
+wall_corner_door_r      = 0x0010B5C8
+wall_doorway            = 0x0010B5D9
+door                    = 0x000159A6
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "ultra_lux"
+description = "Ultra Lux Casino"
+room_height             = 128.0
+room_mid                = 0x00110E9E
+wall_straight           = 0x00110EA1
+wall_straight_rot_adj   = 0.0
+wall_corner_inner       = 0x00110F22
+wall_corner_door_l      = 0x00110F25
+wall_corner_door_l_offset = 16
+wall_corner_door_r      = 0x00110F27
+wall_corner_door_r_rot_adj = 1.5708
+wall_doorway            = 0x00110EA7
+door                    = 0x000B3E4D
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "tops_casino"
+description = "The Tops Casino"
+room_height             = 128.0
+room_mid                = 0x0010CE7E
+wall_straight           = 0x0010CE7B
+wall_corner_inner       = 0x0010CE89
+wall_corner_door_l      = 0x0010CE86
+wall_corner_door_l_offset = 16
+wall_corner_door_r      = 0x0010CE85
+wall_corner_door_r_rot_adj = 1.5708
+wall_doorway            = 0x0010CE74
+door                    = 0x000B0CD4
+acoustic_space          = 0x001405B7
+music_type              = 0x00090908
+image_space             = 0x0003C748
+
+[[kits]]
+name        = "enclave"
+description = "Enclave/Brotherhood interior"
+room_height             = 128.0
+room_mid                = 0x0004E161
+wall_straight           = 0x0004E161
+wall_corner_inner       = 0x0004E15F
+wall_corner_rot_adj     = 1.5708
+wall_corner_door_l      = 0x0004E15F # Does not exist
+wall_corner_door_r      = 0x0004E15F # Does not exist
+wall_doorway            = 0x0004E165
+corridor                = 0x00055C00
+corridor_rot_adj        = 1.5708
+corridor_entrance       = 0x000584B4
+corridor_entrance_left  = 0x000584B1
+corridor_entrance_right = 0x000584B1
+corridor_terminal       = 0x000584B3
+corridor_terminal_rot_adj = 1.5708
+door                    = 0x0007D7A3
+acoustic_space          = 0x0011A3C9
+music_type              = 0x000C8B1C
+
+[[kits]]
+name        = "vault"
+description = "Vault-Tec sealed bunker"
+room_height             = 128.0
+room_mid                = 0x0001EA1F
+wall_straight           = 0x0001EA26
+wall_straight_rot_adj   = 0.0
+wall_straight_ew        = 0x0001EA1A
+wall_corner_inner       = 0x0001EE70 # NE/SW
+wall_corner_rot_adj     = 0.0
+wall_corner_inner_b     = 0x0001EA25 # SE/NW
+wall_corner_inner_b_rot_adj = 1.5708
+wall_corner_door_l      = 0x000211C5 # TODO
+wall_corner_door_r      = 0x0001D7E8 # TODO
+wall_corner_door_l_b    = 0x0001D7E3
+wall_corner_door_l_b_rot_adj = 1.5708
+wall_corner_door_r_b    = 0x000211C4
+wall_corner_door_r_b_rot_adj = 1.5708
+wall_doorway            = 0x0001D7DD # N/S
+wall_doorway_ew         = 0x00020528 # E/W
+wall_doorway_ew_rot_adj = 3.141593
+corridor                = 0x0002052C
+corridor_rot_adj        = 1.5708
+corridor_entrance       = 0x00020529
+corridor_entrance_left  = 0x00004446
+corridor_entrance_right = 0x00004446
+corridor_terminal       = 0x0003BE32
+corridor_terminal_rot_adj = -1.5708
+door                    = 0x0002053D
+door_rot_adj            = 1.5708
+acoustic_space          = 0x0011A3C9
+music_type              = 0x000C8B1C
+
+[[kits]]
+name        = "vault rusty"
+description = "Vault-Tec sealed bunker"
+room_height             = 128.0
+room_mid                = 0x00040613
+wall_straight           = 0x0004060D
+wall_straight_rot_adj   = 0.0
+wall_straight_ew        = 0x00030065
+wall_corner_inner       = 0x00040611 # NE/SW
+wall_corner_rot_adj     = 0.0
+wall_corner_inner_b     = 0x00040612 # SE/NW
+wall_corner_inner_b_rot_adj = 1.5708
+wall_corner_door_l      = 0x00030062 # TODO
+wall_corner_door_r      = 0x00030061 # TODO
+wall_corner_door_l_b    = 0x0003005F
+wall_corner_door_l_b_rot_adj = 1.5708
+wall_corner_door_r_b    = 0x00030060
+wall_corner_door_r_b_rot_adj = 1.5708
+wall_doorway            = 0x0004060E # N/S
+wall_doorway_ew         = 0x0004060C # E/W
+wall_doorway_ew_rot_adj = 3.141593
+corridor                = 0x0003005A
+corridor_rot_adj        = 1.5708
+corridor_entrance       = 0x00030058
+corridor_entrance_left  = 0x0003006A
+corridor_entrance_right = 0x0003006A
+corridor_terminal       = 0x00030076
+corridor_terminal_rot_adj = -1.5708
+door                    = 0x000300E3
+door_rot_adj            = 1.5708
+acoustic_space          = 0x0011A3C9
+music_type              = 0x000C8B1C
+
+
+
+# ── List categories ──────────────────────────────────────────────────────────
+# Maps each UI section to the pools it should display.
+# Lists omitted here appear in every section.
+
+[categories]
+furniture        = [
+    "furniture_office", "living_room_clean", "living_room_dirty", "bathroom_dirty", "bedroom_dirty",
+    "furniture_bathroom", "furniture_bathroom_clean",
+    "furniture_crates", "furniture_crates_large",
+    "furniture_enclave_bed", "furniture_enclave_office",
+    "furniture_grocery",
+    "furniture_hotel",
+    "furniture_industrial",
+    "furniture_kitchen_clean", "furniture_kitchen_dirty",
+    "furniture_medical_clean", "furniture_medical_dirty",
+    "furniture_recreation",
+    "furniture_school", "furniture_school_clean", "furniture_school_dirty",
+    "furniture_shelves_clean", "furniture_shelves_dirty",
+    "furniture_tech", "furniture_tech_clean", "furniture_tech_dirty",
+    "furniture_trash",
+    "furniture_vault_bedroom_clean", "furniture_vault_bedroom_dirty",
+    "furniture_vault_power_clean", "furniture_vault_power_dirty",
+]
+floor_clutter    = [
+    "junk",
+    "clutter_toys", "clutter_books_clean", "clutter_books_dirty",
+    "clutter_tech", "clutter_cleaning", "clutter_science",
+    "clutter_cig_carton", "clutter_medical",
+    "clutter_mag_chr", "clutter_mag_combat", "clutter_mag_tech", "clutter_mag_surv",
+    "clutter_rubble", "clutter_alcohol", "clutter_chems", "clutter_healing",
+    "clutter_money", "clutter_drinks",
+    "clutter_cookware", "clutter_coffee", "clutter_drinkware", "clutter_dinnerware",
+    "clutter_homeware", "clutter_food_boxed", "clutter_food_treats", "clutter_food_fresh",
+    "clutter_pooltable",
+]
+surface_clutter  = [
+    "desk_clutter", "desk_clutter_main", "clutter_pooltable",
+    "clutter_toys", "clutter_books_clean", "clutter_books_dirty",
+    "clutter_tech", "clutter_cleaning_items", "clutter_science",
+    "clutter_cig_carton", "clutter_medical",
+    "clutter_mag_chr", "clutter_mag_combat", "clutter_mag_tech", "clutter_mag_surv",
+    "clutter_rubble", "clutter_alcohol", "clutter_chems", "clutter_healing",
+    "clutter_money", "clutter_drinks", "clutter_checkout",
+    "clutter_cookware", "clutter_coffee", "clutter_drinkware", "clutter_dinnerware",
+    "clutter_homeware", "clutter_food_boxed", "clutter_food_treats", "clutter_food_fresh",
+]
+wall_decorations = [
+    "ncr_posters", "product_posters", "entertainment_posters", "war_posters", "industrial_posters", "corporate_posters",
+    "wall_clock_home", "wall_clock_nuka", "wall_clock_office",
+    "wall_medical", "wall_school",
+]
+lights           = [
+    "ceiling_lights_fluorescent","ceiling_lights_hospital","ceiling_lights_chandelier",
+    "ceiling_lights_flush", "ceiling_lights_vault_clean", "ceiling_lights_vault_dirty"
+]
+
+
+# ── Furniture ────────────────────────────────────────────────────────────────
+
+# -- Office Furniture -------
+[[items]]
+list      = "furniture_office"
+form_id   = 0x000CCF93      # Metal corner desk
+placement = "corners"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708] 
+wall_depth = 84
+
+  [[items.companions]]
+  form_id    = 0x00003F0F   # Dirty office chair
+  forward    = 64.0
+  rot_offset = -1.5708
+  z_offset   = 35.5
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 56.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter_main"  # content list to draw items from
+  count   = 1                # how many items to place
+  z_offset = 56.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_office"
+form_id   = 0x0001CA90      # Metal Desk
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+  [[items.companions]]
+  form_id    = 0x00003F0F   # Dirty office chair
+  forward    = 64.0
+  rot_offset = -1.5708
+  z_offset   = 34.5
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 56.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter_main"  # content list to draw items from
+  count   = 1                # how many items to place
+  z_offset = 56.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_office"
+form_id   = 0x000CCF9B      # Filing Cabinet Bunch
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_office"
+form_id   = 0x000CCF95      # Filing Cabinet Bunch (variant)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+
+[[items]]
+list      = "furniture_office"
+form_id   = 0x000035EA      # Tool Cabinet
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+
+# -- Living Room Clean -------
+[[items]]
+list      = "living_room_clean"
+form_id   = 0x0008D34E      # Clean couch
+placement = "walls"
+jitter    = 0.0
+z_offset   = 34.4
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.companions]]
+  form_id    = 0x0008D340   # Clean Coffee Table
+  forward    = 96.0
+  rot_offset = 1.5708
+  jitter     = 0.0
+
+  [[items.companions.surface_scatter]]
+  list     = "clutter_books_clean"
+  count    = 2
+  z_offset = 27.1
+  x_range  = 15.0
+  y_range  = 10.0
+
+[[items]]
+list      = "living_room_clean"
+form_id   = 0x0006B55A      # Clean chair 
+placement = "walls"
+jitter    = 0.0
+z_offset  = 38.0
+base_rot  = [0.0, 0.0, 1.5708] 
+
+# -- Living Room Dirty -------
+[[items]]
+list      = "living_room_dirty"
+form_id   = 0x0008D34F      # Dirty couch
+placement = "walls"
+jitter    = 0.0
+z_offset   = 34.4
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.companions]]
+  form_id    = 0x0008D33F   # Dirty Coffee Table
+  forward    = 96.0
+  rot_offset = 1.5708
+  jitter     = 0.0
+
+  [[items.companions.surface_scatter]]
+  list     = "clutter_books_dirty"
+  count    = 2
+  z_offset = 27.1
+  x_range  = 15.0
+  y_range  = 10.0
+
+[[items]]
+list      = "living_room_dirty"
+form_id   = 0x0006B55D      # Dirty chair 
+placement = "walls"
+jitter    = 0.0
+z_offset  = 38.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+[[items]]
+list      = "living_room_dirty"
+form_id   = 0x0002700A      # Dirty chair green
+placement = "walls"
+jitter    = 0.0
+z_offset  = 34.5
+base_rot  = [0.0, 0.0, 1.5708] 
+
+[[items]]
+list      = "living_room_dirty"
+form_id   = 0x000D7258     # Cabinet
+placement = "walls"
+jitter    = 0.0
+z_offset  = 98.6
+base_rot  = [0.0, 0.0, 0] 
+
+[[items]]
+list      = "living_room_dirty"
+form_id   = 0x00025B46     # Shelves Wooden
+placement = "walls"
+jitter    = 0.0
+z_offset  = 0
+base_rot  = [0.0, 0.0, -1.5708] 
+
+[[items]]
+list      = "living_room_dirty"
+form_id   = 0x000A11CE     # Shelves Wooden Half
+placement = "walls"
+jitter    = 0.0
+z_offset  = 0
+base_rot  = [0.0, 0.0, -1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_drinks"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 91.8            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_books_dirty"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 62.55           # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_books_dirty"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 36.56           # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "living_room_dirty"
+form_id   = 0x00096286     # Office Cubby/desk
+placement = "walls"
+jitter    = 0.0
+z_offset  = 0
+base_rot  = [0.0, 0.0, -1.5708] 
+
+  [[items.surface_scatter]]
+  list    = "clutter_books_dirty"  # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 63.8            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- Bathroom Dirty-------
+[[items]]
+list      = "bathroom_dirty"
+form_id   = 0x00014AB3      # Toilet
+placement = "walls"
+jitter    = 0.0
+wall_depth = 96
+z_offset   = 75.3
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "bathroom_dirty"
+form_id   = 0x0005C5BD      # Toilet Broken
+placement = "walls"
+jitter    = 0.0
+wall_depth = 96
+z_offset   = 75.3
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "bathroom_dirty"
+form_id   = 0x00020D6F      # Sink
+placement = "walls"
+jitter    = 0.0
+wall_depth = 88
+z_offset   = 42.4
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "bathroom_dirty"
+form_id   = 0x0005C589      # Sink Broken
+placement = "walls"
+jitter    = 0.0
+wall_depth = 88
+z_offset   = 42.4
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "bathroom_dirty"
+form_id   = 0x00018DDB      # Bathtub
+placement = "walls"
+jitter    = 0.0
+z_offset   = 32.45
+base_rot  = [0.0, 0.0, 3.14159]
+
+# -- Bedroom Dirty-------
+[[items]]
+list      = "bedroom_dirty"
+form_id   = 0x00106A6A    # Bed Twin
+placement = "walls"
+jitter    = 0.0
+z_offset   = 30.31
+wall_dept = 20
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.companions]]
+  form_id    = 0x0006B54C   # End Table
+  forward    = 64.0
+  rot_offset = -1.5708
+  z_offset   = 0.0
+
+[[items]]
+list      = "bedroom_dirty"
+form_id   = 0x00106A6B    # Bed Queen
+placement = "walls"
+jitter    = 0.0
+z_offset   = 30.31
+wall_depth = 16
+base_rot  = [0.0, 0.0, -1.5708]
+
+  [[items.companions]]
+  form_id    = 0x0006B54C   # End Table
+  forward    = 64.0
+  rot_offset = -1.5708
+  z_offset   = 0.0
+
+[[items]]
+list      = "bedroom_dirty"
+form_id   = 0x000D7258     # Cabinet
+placement = "walls"
+jitter    = 0.0
+z_offset  = 98.6
+base_rot  = [0.0, 0.0, 0] 
+
+[[items]]
+list      = "bedroom_dirty"
+form_id   = 0x000A11CE     # Shelves Wooden Half
+placement = "walls"
+jitter    = 0.0
+z_offset  = 0
+base_rot  = [0.0, 0.0, 1.5708] 
+
+# ── Floor clutter ────────────────────────────────────────────────────────────
+# Example: a cigarette pack that always lies flat with random yaw
+
+# -- Junk -------
+[[items]]
+list     = "junk"
+form_id  = 0x00020137       # Paper debris
+z_offset = 66.738
+jitter   = 3.1415
+
+[[items]]
+list     = "junk"
+form_id  = 0x00020138       # Paper debris alt
+z_offset = 66.738
+jitter   = 3.1415
+
+[[items]]
+list     = "junk"
+form_id  = 0x000A9E70      # Burned Book
+z_offset = 1.4487
+jitter   = 3.1415
+
+[[items]]
+list     = "junk"
+form_id  = 0x000A9E69      # Burned Book Alt
+z_offset = 1.4487
+jitter   = 3.1415
+
+[[items]]
+list     = "junk"
+form_id  = 0x00034069       # Cigarette Pack
+base_rot = [1.5708, 0.0, 0.0]
+z_offset = 2.05
+jitter = [0.0, 3.14, 0] 
+
+[[items]]
+list     = "junk"
+form_id  = 0x00022104       # Tin Can
+base_rot = [1.5708, 0.0, 0.0]
+z_offset = 4.2395
+jitter = [0.0, 3.14, 0]
+
+[[items]]
+list     = "junk"
+form_id  = 0x0005B6CA      # Bent Tin Can
+base_rot = [1.5708, 0.0, 0.0]
+z_offset = 4.2395
+jitter = [0.0, 3.14, 0] 
+
+[[items]]
+list     = "junk"
+form_id  = 0x0005B63B      # Milk Bottle
+base_rot = [1.5708, 0.0, 0.0]
+z_offset = 4.6907
+jitter = [0.0, 3.14, 0] 
+
+[[items]]
+list     = "junk"
+form_id  = 0x00022103      # Nuka Bottle
+base_rot = [1.5708, 0.0, 0.0]
+z_offset = 4.3821
+jitter = [0.0, 3.14, 0] 
+
+[[items]]
+list     = "junk"
+form_id  = 0x00103B1B      # Sunset Bottle
+base_rot = [1.5708, 0.0, 0.0]
+z_offset = 3.7091
+jitter = [0.0, 3.14, 0] 
+
+# ── Surface clutter ────────────────────────────────────────────────────────────
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x00034069        # Cigarette Pack
+base_rot = [1.5708, 0.0, 0.0]
+z_offset = 2.05              # sits 2 units above the surface
+jitter = [0.0, 3.14, 0] 
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x0002509E        # Assorted Papers
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.5               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x0002509D        # Assorted Papers
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.5               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x0003406C        # Coffee Mug
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 8.1950            # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x0005B63C        # Pencil
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.0               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x00025235       # Clipboard
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.0               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x00025238        # Clipboard alt
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.0               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x000389C6        # Telephone
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.0               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x00017AC8        # Office Fan
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.0               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list     = "desk_clutter"
+form_id  = 0x00019FB7        # Globe
+base_rot = [0.0, 0.0, 0.0]
+z_offset = 0.0               # sits 2 units above the surface
+jitter   = [0.0, 0.0, 6.2832] # random heading, stays flat
+
+[[items]]
+list    = "desk_clutter"
+form_id = 0x0005B52C      # Cigarette
+jitter   = [0.0, 0.0, 6.2832]
+
+[[items]]
+list    = "desk_clutter"
+form_id = 0x0001C296      # Glasses Reading
+jitter   = [0.0, 0.0, 6.2832]
+
+[[items]]
+list    = "desk_clutter"
+form_id = 0x0003409D      # Paperweight
+jitter   = [0.0, 0.0, 6.2832]
+
+# -- desk_clutter_main -------
+
+[[items]]
+list    = "desk_clutter_main"
+form_id = 0x00079AC2      # Terminal Desk Off (clean)
+jitter   = [0.0, 0.0, 1.5708]
+
+[[items]]
+list    = "desk_clutter_main"
+form_id = 0x000585F5      # Terminal Desk On (clean)
+jitter   = [0.0, 0.0, 1.5708]
+
+[[items]]
+list    = "desk_clutter_main"
+form_id = 0x00022D7F      # Deskpad Planner
+jitter   = [0.0, 0.0, 1.5708]
+
+[[items]]
+list    = "desk_clutter_main"
+form_id = 0x0002942E      # Ham Radio
+z_offset = 9.29
+jitter   = [0.0, 0.0, 1.5708]
+
+[[items]]
+list    = "desk_clutter_main"
+form_id = 0x0003180E      # Typewriter
+jitter   = [0.0, 0.0, 1.5708]
+z_offset = 20.4501
+
+[[items]]
+list    = "desk_clutter_main"
+form_id = 0x00042655      # Terminal Desk Off (dirty)
+jitter   = [0.0, 0.0, 1.5708]
+
+[[items]]
+list    = "desk_clutter_main"
+form_id = 0x000FD176      # Terminal Desk On (dirty)
+jitter   = [0.0, 0.0, 1.5708]
+
+# Clutter_checkout
+[[items]]
+list    = "clutter_checkout"
+form_id = 0x000FEC87      # Terminal Desk On (dirty)
+jitter   = [0.0, 0.0, 1.5708]
+
+
+# ── Posters───────────────────────────────────────────────────────────────────
+
+# -- NCR Posters -------
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0F3
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0F5
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0F6
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0F7
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0F8
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0F9
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0FA
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "ncr_posters"
+form_id    = 0x0015F0F4
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- Product Posters -------
+
+[[items]]
+list       = "product_posters"
+form_id    = 0x00063984 # Abraxo
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "product_posters"
+form_id    = 0x00063987 # Capt Cosmos
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "product_posters"
+form_id    = 0x00063986 # Giddyup Buttercup
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "product_posters"
+form_id    = 0x00063985 # Sugar Bombs
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "product_posters"
+form_id    = 0x0010735A # Sarsaparilla Poster 1
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "product_posters"
+form_id    = 0x0010735B # Sarsaparilla Poster 1
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "product_posters"
+form_id    = 0x00109C8C # Sarsaparilla Poster 1
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- Entertainment Posters -------
+
+[[items]]
+list       = "entertainment_posters"
+form_id    = 0x000E5869 # Dean Domino
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "entertainment_posters"
+form_id    = 0x000E586A # Joey Baxter
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "entertainment_posters"
+form_id    = 0x000E586B # Danny Parker
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "entertainment_posters"
+form_id    = 0x000E58C7 # Ali-Din
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "entertainment_posters"
+form_id    = 0x000E58C8 # Wilfred
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "entertainment_posters"
+form_id    = 0x000E58C6 # Maxis
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- War Posters -------
+
+[[items]]
+list       = "war_posters"
+form_id    = 0x0002127B # Enlist today
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "war_posters"
+form_id    = 0x0006398B # War bonds
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "war_posters"
+form_id    = 0x00070161 # Victory
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- Corporate Posters -------
+
+[[items]]
+list       = "corporate_posters"
+form_id    = 0x000E9B57 # Security
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "corporate_posters"
+form_id    = 0x000E9B58 # Espionage
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "corporate_posters"
+form_id    = 0x000E9B59 # Employee assets
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "corporate_posters"
+form_id    = 0x000E9B5A # Badge
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- Industrial Posters -------
+
+[[items]]
+list       = "industrial_posters"
+form_id    = 0x00063989 # Radiation King
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "industrial_posters"
+form_id    = 0x00024478 # Safety
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "industrial_posters"
+form_id    = 0x000DA132 # Poseidon Energy
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "industrial_posters"
+form_id    = 0x000DA134 # Poseidon Energy
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- Wall lights - Enclave -------
+
+[[items]]
+list       = "wall_lights_enclave"
+form_id    = 0x000583B6 # Enclave light vertical
+placement  = "walls"
+jitter     = 0.0
+# z_offset   = 72.0
+# wall_depth = 112
+
+[[items]]
+list       = "wall_lights_enclave"
+form_id    = 0x000583F8 # Enclave light horizontal
+placement  = "walls"
+jitter     = 0.0
+# z_offset   = 72.0
+# wall_depth = 112
+
+[[items]]
+list       = "wall_lights_industrial"
+form_id    = 0x000228A2 # Industrial light
+placement  = "walls"
+jitter     = 0.0
+# z_offset   = 72.0
+# wall_depth = 112
+
+[[items]]
+list       = "wall_lights_industrial"
+form_id    = 0x0001EF32 # Industrial light
+placement  = "walls"
+jitter     = 0.0
+# z_offset   = 72.0
+# wall_depth = 112
+
+# ── Lights ───────────────────────────────────────────────────────────────────
+[[items]]
+list    = "ceiling_lights_fluorescent"
+form_id = 0x0001F840
+z_offset = 100
+  [[items.companions]]
+  form_id    = 0x0004DFDB   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_fluorescent"
+form_id = 0x0001F83D
+z_offset = 100
+  [[items.companions]]
+  form_id    = 0x0004DFDB   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_fluorescent"
+form_id = 0x0001F83E
+z_offset = 100
+  [[items.companions]]
+  form_id    = 0x0004DFDB   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_hospital"
+form_id = 0x000B7B80
+z_offset = 39
+  [[items.companions]]
+  form_id    = 0x0003C85C   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_hospital"
+form_id = 0x000B7B81
+z_offset = 39
+  [[items.companions]]
+  form_id    = 0x0003C85C   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_chandelier"
+form_id = 0x0002E432
+z_offset = 155
+  [[items.companions]]
+  form_id    = 0x0003C85C   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_chandelier"
+form_id = 0x0005AC68
+z_offset = 155
+  [[items.companions]]
+  form_id    = 0x0003C85C   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_flush"
+form_id = 0x0001256C3
+z_offset = 127
+  [[items.companions]]
+  form_id    = 0x0004DFDB   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_flush"
+form_id = 0x000126D4B
+z_offset = 127
+  [[items.companions]]
+  form_id    = 0x0004DFDB   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_vault_dirty"
+form_id = 0x00040626
+z_offset = 136
+  [[items.companions]]
+  form_id    = 0x0003C85C   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_vault_dirty"
+form_id = 0x0009AF5D
+z_offset = 136
+  [[items.companions]]
+  form_id    = 0x0003C85C   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+[[items]]
+list    = "ceiling_lights_vault_clean"
+form_id = 0x000296D7
+z_offset = 136
+  [[items.companions]]
+  form_id    = 0x0003C85C   # Key Light
+  rot_offset = -1.5708
+  z_offset   = -64
+
+# ── Clutter (imported) ──────────────────────────────────────────────────────
+
+# ─── Junk (additions) ───
+
+# -- junk -------
+
+[[items]]
+list    = "junk"
+form_id = 0x0003D97F      # Postal Box
+
+[[items]]
+list    = "junk"
+form_id = 0x0009A809      # Chessboard
+
+[[items]]
+list    = "junk"
+form_id = 0x000F1E49      # Popcorn Box
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+z_offset = 4.0000
+
+[[items]]
+list    = "junk"
+form_id = 0x000F1E4B      # Soda Cup
+base_rot = [1.5132, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+z_offset = 3.614
+
+# ─── Toys ───
+
+# -- clutter_toys -------
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x0002B40B      # Baseball
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x0002B410      # Baseball Glove
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x0005B638      # Harmonica
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x00029171      # Nuka Truck
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x0001F21F      # Teddy Bear
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x0003FCCE      # Toy Block
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x00022110      # Toy Car
+
+[[items]]
+list    = "clutter_toys"
+form_id = 0x000CD18B      # Toy Dino
+
+# ─── Books ───
+
+# -- clutter_books_clean -------
+
+[[items]]
+list    = "clutter_books_clean"
+form_id = 0x000C5D24      # Book Generic 1
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+[[items]]
+list    = "clutter_books_clean"
+form_id = 0x000FC9C0      # Book Generic 2
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+[[items]]
+list    = "clutter_books_clean"
+form_id = 0x000FC9BA      # Book Generic 3
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+[[items]]
+list    = "clutter_books_clean"
+form_id = 0x000FC9BB      # Book Generic 4
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+# -- clutter_books_dirty -------
+[[items]]
+list    = "clutter_books_dirty"
+form_id = 0x000A9E70      # Burned Book 1
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+[[items]]
+list    = "clutter_books_dirty"
+form_id = 0x000A9E69      # Burned Book 2
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+[[items]]
+list    = "clutter_books_dirty"
+form_id = 0x000A9E6A      # Burned Book 3
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+[[items]]
+list    = "clutter_books_dirty"
+form_id = 0x000A9E6B      # Burned Book 4
+base_rot = [0.0, 0.0, 0.0]
+jitter   = [0.0, 0.0, 3.14]
+z_offset = 1.4487
+
+# ─── Tech ───
+
+# -- clutter_tech -------
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x00022108      # Cherry Bomb
+z_offset = 2.48
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x00022102      # Conductor
+z_offset = 3.91
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x0002210E      # Paint Gun
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x00013B2B2     # Duct Tape
+z_offset = 1.97
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x0005B637      # hammer
+base_rot = [-1.5708, 0.0, 1.5708]
+jitter   = [0.0, 3.14, 0]
+z_offset = 2.02
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x000220FC      # Pilot light
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x0013B2B1      # Scrap Electronics
+z_offset = 4.34
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x00033BC6      # Fission Battery
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x00022109      # Sensor Module
+z_offset = 2.46
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x00031944      # Spare Parts
+z_offset = 6.7
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x00022112      # Steam Gauge Assembly
+z_offset = 5.85
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x0002210A      # Wonder Glue
+z_offset = 10.7
+
+[[items]]
+list    = "clutter_tech"
+form_id = 0x0005B6D0      # Wrench
+z_offset = 0.46
+# ─── Cleaning ───
+
+# -- clutter_cleaning -------
+
+[[items]]
+list    = "clutter_cleaning"
+form_id = 0x00087469      # Broom
+z_offset = 44.4
+
+[[items]]
+list    = "clutter_cleaning"
+form_id = 0x0002321A      # Mop
+
+[[items]]
+list    = "clutter_cleaning"
+form_id = 0x000236D5      # Mop Bucket
+
+[[items]]
+list    = "clutter_cleaning"
+form_id = 0x000039DE      # bucket
+z_offset = 19.1
+
+[[items]]
+list    = "clutter_cleaning"
+form_id = 0x000340A4      # Plunger
+
+[[items]]
+list    = "clutter_cleaning"
+form_id = 0x00020D70      # Fire Extinguisher
+z_offset = 23.55
+
+# -- clutter_cleaning_items -------
+
+[[items]]
+list    = "clutter_cleaning_items"
+form_id = 0x0000000A      # Lockpick
+z_offset = 1.09
+
+[[items]]
+list    = "clutter_cleaning_items"
+form_id = 0x00022105      # Turpentine
+
+[[items]]
+list    = "clutter_cleaning_items"
+form_id = 0x00022106      # Abraxo
+z_offset = 8.8
+
+[[items]]
+list    = "clutter_cleaning_items"
+form_id = 0x0003406F      # Detergent
+z_offset = 10.3
+
+# ─── Science ───
+
+# -- clutter_science -------
+
+[[items]]
+list    = "clutter_science"
+form_id = 0x00024113      # Chemistry Set
+
+[[items]]
+list    = "clutter_science"
+form_id = 0x0001BD7C      # Lab machine
+
+[[items]]
+list    = "clutter_science"
+form_id = 0x00078CE6      # Microscope
+
+# ─── Cigarettes ───
+
+# -- clutter_cig_carton -------
+
+[[items]]
+list    = "clutter_cig_carton"
+form_id = 0x00034068      # Cigarette Carton
+
+# ─── Medical ───
+
+# -- clutter_medical -------
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x0002210D      # Medical Brace
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x000250A3      # Bonesaw
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x0001B01F      # Crutch
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x000250A7      # Forceps
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x0005F183      # Opthalmoscope
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x000250A5      # Scalpel
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x000250A4      # Scissors
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x000250A8      # Syringe
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x000231E0      # Surgical Tray
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x00095E4A      # Surgical Tray Boody
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x00022111      # Surgical Tubing
+
+[[items]]
+list    = "clutter_medical"
+form_id = 0x000250A6      # Tweezers
+
+# ─── Magazines ───
+
+# -- clutter_mag_chr -------
+
+[[items]]
+list    = "clutter_mag_chr"
+form_id = 0x000EC4A4      # Magazine Barter
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_chr"
+form_id = 0x000EC4AE      # Magazine Speech
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+# -- clutter_mag_combat -------
+
+[[items]]
+list    = "clutter_mag_combat"
+form_id = 0x00135689      # Magazine Crits
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_combat"
+form_id = 0x000EC4A6      # Magazine Energy Weapons
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_combat"
+form_id = 0x000EC4A7      # Magazine Explosives
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_combat"
+form_id = 0x000EC4AC      # Magazine Guns
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_combat"
+form_id = 0x000EC4AA      # Magazine Melee
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_combat"
+form_id = 0x000EC4B0      # Magazine Unarmed
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+# -- clutter_mag_tech -------
+
+[[items]]
+list    = "clutter_mag_tech"
+form_id = 0x000EC4A8      # Magazine Lockpick
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_tech"
+form_id = 0x000EC4AB      # Magazine Repair
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_tech"
+form_id = 0x000EC4B1      # Magazine Science
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+# -- clutter_mag_surv -------
+
+[[items]]
+list    = "clutter_mag_surv"
+form_id = 0x000EC4A9      # Magazine Medicine
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_surv"
+form_id = 0x000EC4AD      # Magazine Sneak
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+[[items]]
+list    = "clutter_mag_surv"
+form_id = 0x000EC4AF      # Magazine Survival
+base_rot = [1.5708, 0.0, 0.0]
+jitter   = [0.0, 3.14, 0]
+
+# ─── Rubble ───
+
+# -- clutter_rubble -------
+
+[[items]]
+list    = "clutter_rubble"
+form_id = 0x0001EE9A      # Office Rubble 1
+
+[[items]]
+list    = "clutter_rubble"
+form_id = 0x0001F8B5      # Office Rubble 2
+
+[[items]]
+list    = "clutter_rubble"
+form_id = 0x000A4D8D      # Neo Rubble 3
+
+# ─── Alcohol ───
+
+# -- clutter_alcohol -------
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x00115EB1      # Absinthe
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x00015197      # beer
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x0016163D      # Moonshine
+z_offset = 12.6
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x000E2F6A      # Atomic Cocktail
+z_offset = 5.9
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x000151A1      # Scotch
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x0005B6CD      # Scotch (Empty)
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x00032C74      # Vodka
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x00032C75      # Whiskey
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x0005B6CE      # Whiskey (Empty)
+
+[[items]]
+list    = "clutter_alcohol"
+form_id = 0x0003404A      # Wine
+z_offset = 11.47
+
+# ─── Chems ───
+
+# -- clutter_chems -------
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x00015163      # Buffout
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x00015164      # Jet
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x00015165      # Mentats
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x00050F8F      # Med-X
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x00013B2C3     # Hydra
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x000CEA5F      # Rebound
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x000CED8C      # Steady
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x00015166      # Psycho
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x00146CCD      # Rocket
+
+[[items]]
+list    = "clutter_chems"
+form_id = 0x000146CCA     # Slasher
+
+# ─── Healing ───
+
+# -- clutter_healing -------
+
+[[items]]
+list    = "clutter_healing"
+form_id = 0x00015169      # Stimpak
+base_rot  = [1.5708, 0.0, 0.0]
+jitter    = 0
+z_offset  = 1.23
+
+# [[items]]
+# list    = "clutter_healing"
+# form_id = 0x000CCEF2      # Stimpak (Super)
+
+[[items]]
+list    = "clutter_healing"
+form_id = 0x00015167      # Radaway
+
+[[items]]
+list    = "clutter_healing"
+form_id = 0x00015168      # RadX
+z_offset = 4.9535
+# ─── Money ───
+
+# -- clutter_money -------
+
+[[items]]
+list    = "clutter_money"
+form_id = 0x00034067      # Prewar Money
+
+# ─── Drinks ───
+
+# -- clutter_drinks -------
+
+[[items]]
+list    = "clutter_drinks"
+form_id = 0x0001519E      # Nuka Cola
+z_offset = 11.1
+
+[[items]]
+list    = "clutter_drinks"
+form_id = 0x00103B1E      # Sunset Sarsaparilla
+
+# ─── Cookware ───
+
+# -- clutter_cookware -------
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x0002541B      # Big Pot
+z_offset = 10.8
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x0003406E      # Cutting Board
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x000340BB      # Spatula
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x0005516B      # hot Plate
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x0003409C      # Pan Cooking
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x0013B2B3      # Egg Timer
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x000340A7      # Pot Cooking
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x00022113      # Pressure Cooker
+z_offset = 8
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x0009A807      # Toaster (Clean)
+
+[[items]]
+list    = "clutter_cookware"
+form_id = 0x0009A808      # Toaster (Dirty)
+
+# ─── Coffee ───
+
+# -- clutter_coffee -------
+
+[[items]]
+list    = "clutter_coffee"
+form_id = 0x00034178      # Coffee Brewer
+z_offset = 22.5
+
+[[items]]
+list    = "clutter_coffee"
+form_id = 0x00025421      # Coffee Kettle
+z_offset = 15.35
+
+[[items]]
+list    = "clutter_coffee"
+form_id = 0x0002E3B2      # Cofee Urn
+z_offset = 32.4 
+
+# ─── Drinkware ───
+
+# -- clutter_drinkware -------
+
+[[items]]
+list    = "clutter_drinkware"
+form_id = 0x0003407B      # Drinking Glass
+z_offset = 7.56
+
+[[items]]
+list    = "clutter_drinkware"
+form_id = 0x000340B5      # Shot glass
+z_offset = 4.4
+
+[[items]]
+list    = "clutter_drinkware"
+form_id = 0x0005B636      # Glass Pitcher
+
+# ─── Dinnerware ───
+
+# -- clutter_dinnerware -------
+
+[[items]]
+list    = "clutter_dinnerware"
+form_id = 0x0016D555      # Candle Stick
+
+[[items]]
+list    = "clutter_dinnerware"
+form_id = 0x00034078      # Fork
+z_offset = 0.7
+
+[[items]]
+list    = "clutter_dinnerware"
+form_id = 0x0005B639      # Knife
+z_offset = 0.16
+
+[[items]]
+list    = "clutter_dinnerware"
+form_id = 0x0005B63D      # Plate
+
+[[items]]
+list    = "clutter_dinnerware"
+form_id = 0x000340BC      # spoon
+z_offset = 0.7
+
+# ─── Homeware ───
+
+# -- clutter_homeware -------
+
+[[items]]
+list    = "clutter_homeware"
+form_id = 0x00034088      # Iron
+
+# ─── Food — Boxed ───
+
+# -- clutter_food_boxed -------
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x00074EE1      # Flour
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x00022107      # Lunchbox
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x0016163C      # Yeast
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x0008C556      # Mac and Cheese
+z_offset = 7.5
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x0008C552      # Cram
+z_offset = 5
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x0008C554      # Dandy Boy Apples
+z_offset = 6
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x000293A9      # Salisbury Steak
+z_offset = 7
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x0008C558      # Instamash
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x0008C55E      # Pork n Beans
+
+[[items]]
+list    = "clutter_food_boxed"
+form_id = 0x0008C55C      # Deviled Eggs
+z_offset = 5.75
+
+# ─── Food — Treats ───
+
+# -- clutter_food_treats -------
+
+[[items]]
+list    = "clutter_food_treats"
+form_id = 0x0008C560      # Bubble gum
+
+[[items]]
+list    = "clutter_food_treats"
+form_id = 0x0008C55A      # Facy Lads Snack Cakes
+
+[[items]]
+list    = "clutter_food_treats"
+form_id = 0x0008C562      # Potato Crisps
+
+[[items]]
+list    = "clutter_food_treats"
+form_id = 0x0008C551      # Sugar Bombs
+
+# ─── Food — Fresh ───
+
+# -- clutter_food_fresh -------
+
+[[items]]
+list    = "clutter_food_fresh"
+form_id = 0x0001519C      # Mutfruit Crunchy
+
+[[items]]
+list    = "clutter_food_fresh"
+form_id = 0x00034049      # Mutfruit
+
+[[items]]
+list    = "clutter_food_fresh"
+form_id = 0x000EC01D      # Barrel Cactus
+
+[[items]]
+list    = "clutter_food_fresh"
+form_id = 0x000EACA4      # Banana Yucca
+
+[[items]]
+list    = "clutter_food_fresh"
+form_id = 0x000151A0      # Potato
+
+[[items]]
+list    = "clutter_food_fresh"
+form_id = 0x001613C1      # Coyote Steak
+
+[[items]]
+list    = "clutter_food_fresh"
+form_id = 0x000E2F65      # gecko Steak
+
+# ─── Pool Table ───
+
+# -- clutter_pooltable -------
+
+[[items]]
+list    = "clutter_pooltable"
+form_id = 0x0002B41B      # Pool 10 Ball
+z_offset = 3.5
+
+[[items]]
+list    = "clutter_pooltable"
+form_id = 0x0002B41D      # Pool 13 Ball
+z_offset = 3.5
+
+[[items]]
+list    = "clutter_pooltable"
+form_id = 0x0002B415      # Pool 2 Ball
+z_offset = 3.5
+
+[[items]]
+list    = "clutter_pooltable"
+form_id = 0x0002B417      # Pool 5 Ball
+z_offset = 3.5
+
+[[items]]
+list    = "clutter_pooltable"
+form_id = 0x0002B419      # Pool 8 ball
+z_offset = 3.5
+
+[[items]]
+list    = "clutter_pooltable"
+form_id = 0x0002B41F      # Pool Cue Ball
+z_offset = 3.5
+
+[[items]]
+list    = "clutter_pooltable"
+form_id = 0x0002C5F6      # Pool triangle
+z_offset = 1.67
+
+# ── Furniture (imported) ────────────────────────────────────────────────────
+
+
+# -- furniture_bathroom -------
+
+[[items]]
+list      = "furniture_bathroom"
+form_id   = 0x0001E017      # Drink Water Fountain
+placement = "walls"
+jitter    = 0.0
+wall_depth = 88
+z_offset  = 49.49
+base_rot  = [0.0, 0.0, 0.0]
+
+# -- furniture_bathroom_clean -------
+
+[[items]]
+list      = "furniture_bathroom_clean"
+form_id   = 0x00165C3B      # Sink (Clean)
+placement = "walls"
+z_offset   = 42.4
+jitter    = 0.0
+wall_depth = 88
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_bathroom_clean"
+form_id   = 0x00165C3A      # Toilet (clean)
+placement = "walls"
+z_offset   = 75.3
+jitter    = 0.0
+wall_depth = 96
+base_rot  = [0.0, 0.0, -1.5708]
+
+# -- furniture_crates -------
+
+[[items]]
+list      = "furniture_crates"
+form_id   = 0x000E2A08      # Crate Wood
+placement = "corners"
+jitter    = 0.0
+wall_depth = 16.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+[[items]]
+list      = "furniture_crates"
+form_id   = 0x0010AC4B      # Crate Water
+placement = "walls"
+jitter    = 0.0
+wall_depth = 16.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_crates_large -------
+
+[[items]]
+list      = "furniture_crates_large"
+form_id   = 0x00085908      # Crate Large Yellow
+placement = "walls"
+jitter    = 0.0
+wall_depth = 20
+base_rot  = [0.0, 0.0, 1.5708]
+
+[[items]]
+list      = "furniture_crates_large"
+form_id   = 0x000F21A0      # Crate Large Grey
+placement = "walls"
+jitter    = 0.0
+wall_depth = 20
+base_rot  = [0.0, 0.0, 1.5708]
+
+[[items]]
+list      = "furniture_crates_large"
+form_id   = 0x000F219B      # Crate Large Red
+placement = "walls"
+jitter    = 0.0
+wall_depth = 20
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_enclave_bed -------
+
+[[items]]
+list      = "furniture_enclave_bed"
+form_id   = 0x0008AFE2      # Enclave Bed
+placement = "walls"
+jitter    = 0.0
+z_offset  = 30
+wall_depth = 54
+base_rot  = [0.0, 0.0, 0]
+
+# -- furniture_enclave_office -------
+
+[[items]]
+list      = "furniture_enclave_office"
+form_id   = 0x000872DF      # Enclave Table
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 55.1            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter_main"   # content list to draw items from
+  count   = 1                # how many items to place
+  z_offset = 55.1            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- furniture_grocery -------
+
+[[items]]
+list      = "furniture_grocery"
+form_id   = 0x0006A793      # Grocery Shelves
+placement = "walls"
+jitter    = 0.0
+wall_depth = 84.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_food_boxed"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 34.07            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_alcohol"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 72.9            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_grocery"
+form_id   = 0x0006A79B      # Grocery Checkout
+placement = "interior"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_checkout"   # content list to draw items from
+  count   = 1                # how many items to place
+  z_offset = 66.8            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_grocery"
+form_id   = 0x0006E04F      # Grocery Freezer
+placement = "interior"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_drinks"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 16.55           # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_alcohol"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 16.55           # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- furniture_hotel -------
+
+[[items]]
+list      = "furniture_hotel"
+form_id   = 0x0011C533      # Floor lamp
+jitter    = 0.0
+wall_depth = 88
+base_rot  = [0.0, 0.0, 1.5708]
+
+[[items]]
+list      = "furniture_hotel"
+form_id   = 0x0002EDFE      # Ironing Board
+placement = "interior"
+jitter    = 3.14159
+z_offset  = 28.7
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_industrial -------
+
+[[items]]
+list      = "furniture_industrial"
+form_id   = 0x000CD530      # Machine Tool 1
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_industrial"
+form_id   = 0x000CD52E      # Machine Tool 2
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_industrial"
+form_id   = 0x000CD228      # Machine Tool 3
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+# -- Kitchen Dirty-------
+[[items]]
+list      = "furniture_kitchen_dirty"
+form_id   = 0x000CE6F0      # Oven
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+  [[items.surface_scatter]]
+  list    = "clutter_cookware"   # content list to draw items from
+  count   = 2                # how many items to place
+  z_offset = 70.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_kitchen_dirty"
+form_id   = 0x0001D90D      # Refrigerator Food
+placement = "walls"
+jitter    = 0.0
+z_offset   = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_kitchen_dirty"
+form_id   = 0x00014E20      # Bar top
+placement = "walls"
+jitter    = 0.0
+z_offset   =38
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_cookware"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 74.2            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_food_boxed"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 74.2            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_kitchen_dirty"
+form_id   = 0x0006B54A     # Dining Table
+placement = "interior"
+jitter    = 0.0
+z_offset   = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_dinnerware"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 55.1            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+
+  [[items.surface_scatter]]
+  list    = "clutter_drinkware"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 55.1            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_kitchen_dirty"
+form_id   = 0x000B39A3     # Sink metal (Rusty)
+placement = "walls"
+jitter    = 0.0
+wall_depth = 110
+base_rot  = [0.0, 0.0, 1.5708]
+
+[[items]]
+list      = "furniture_kitchen_dirty"
+form_id   = 0x000A2825      # Refrigerator Alcohol
+placement = "walls"
+jitter    = 0.0
+z_offset   = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+# -- furniture_kitchen_clean -------
+[[items]]
+list      = "furniture_kitchen_clean"
+form_id   = 0x00002FC9      # Oven (Clean)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+  [[items.surface_scatter]]
+  list    = "clutter_cookware"   # content list to draw items from
+  count   = 2                # how many items to place
+  z_offset = 70.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_kitchen_clean"
+form_id   = 0x0013658B      # Refrigerator Food (clean)
+placement = "walls"
+jitter    = 0.0
+z_offset   = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_kitchen_clean"
+form_id   = 0x0006482C      # RCTable
+placement = "walls"
+jitter    = 0.0
+z_offset  = 0
+base_rot  = [0.0, 0.0, 3.14159]
+
+  [[items.surface_scatter]]
+  list    = "clutter_coffee"   # content list to draw items from
+  count   = 4                # how many items to place
+  z_offset = 73.2            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_kitchen_dirty"
+form_id   = 0x0006B54A     # Dining Table
+placement = "interior"
+jitter    = 0.0
+z_offset   = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_dinnerware"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 55.1            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+
+  [[items.surface_scatter]]
+  list    = "clutter_drinkware"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 55.1            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_kitchen_clean"
+form_id   = 0x0009D786      # Sink metal (clean)
+placement = "walls"
+jitter    = 0.0
+wall_depth = 110
+base_rot  = [0.0, 0.0, -1.5708]
+
+# -- furniture_medical_clean -------
+
+[[items]]
+list      = "furniture_medical_clean"
+form_id   = 0x00015AAE      # Surgical Cart
+placement = "anywhere"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_healing"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 68.3            # height of the desk surface above the floor
+  x_range  = 24.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+
+[[items]]
+list      = "furniture_medical_clean"
+form_id   = 0x000258BD      # Anesthesia Machine (clean)
+placement = "anywhere"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_medical_dirty -------
+
+[[items]]
+list      = "furniture_medical_dirty"
+form_id   = 0x00042652      # Surgical Cart Rusted
+placement = "anywhere"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_healing"   # content list to draw items from
+  count   = 3                # how many items to place
+  z_offset = 68.3            # height of the desk surface above the floor
+  x_range  = 24.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_medical_dirty"
+form_id   = 0x00042645      # Anesthesia Machine (dirty)
+placement = "anywhere"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_recreation -------
+
+[[items]]
+list      = "furniture_recreation"
+form_id   = 0x0002D671      # Jukebox Dirty
+placement = "walls"
+jitter    = 0.0
+z_offset  = 67.8
+wall_depth = 80
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_recreation"
+form_id   = 0x0002C5F8      # Pool Table
+placement = "interior"
+jitter    = 0.0
+z_offset  = 29.93
+
+  [[items.surface_scatter]]
+  list    = "clutter_pooltable"   # content list to draw items from
+  count   = 7                # how many items to place
+  z_offset = 54.6            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- furniture_school -------
+
+[[items]]
+list      = "furniture_school"
+form_id   = 0x000194B8      # Chalkboard Floor
+placement = "walls"
+jitter    = 0.0
+z_offset  = 106.45
+wall_depth = 84
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_school_clean -------
+
+[[items]]
+list      = "furniture_school_clean"
+form_id   = 0x000874EB      # Vault School Desk (Clean)
+placement = "interior"
+jitter    = 0.0
+z_offset  = 34.65
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_books_clean"   # content list to draw items from
+  count   = 2                # how many items to place
+  z_offset = 55.73           # height of the desk surface above the floor
+  x_range  = 24.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- furniture_school_dirty -------
+
+[[items]]
+list      = "furniture_school_dirty"
+form_id   = 0x00089B23      # Vault School Desk (Dirty)
+placement = "interior"
+jitter    = 0.0
+z_offset  = 34.65
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_books_dirty"   # content list to draw items from
+  count   = 2                # how many items to place
+  z_offset = 55.73           # height of the desk surface above the floor
+  x_range  = 24.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- furniture_shelves_clean -------
+
+[[items]]
+list      = "furniture_shelves_clean"
+form_id   = 0x000199B1      # Metal Shelves (clean)
+placement = "walls"
+jitter    = 0.0
+wall_depth = 88
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_cig_carton"   # content list to draw items from
+  count   = 2                # how many items to place
+  z_offset = 115.8            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_cleaning_items"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 80            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_tech"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 43.8            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- furniture_shelves_dirty -------
+
+[[items]]
+list      = "furniture_shelves_dirty"
+form_id   = 0x00042651      # Metal Shelves (dirty)
+placement = "walls"
+jitter    = 0.0
+wall_depth = 88
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.surface_scatter]]
+  list    = "clutter_cig_carton"   # content list to draw items from
+  count   = 2                # how many items to place
+  z_offset = 115.8            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_cleaning_items"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 80            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "clutter_tech"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 43.8            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+# -- furniture_tech -------
+
+[[items]]
+list      = "furniture_tech"
+form_id   = 0x00034176      # Microfiche Machine
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+# -- furniture_tech_clean -------
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x000AB512      # Control Console 1
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 0.0]
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x000ABDF8      # Control Console 2
+placement = "walls"
+wall_depth = 40
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x000ABE00      # Server Rack (Clean)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 0.0]
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x0005E516      # Desk Wood (Clean)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+  [[items.companions]]
+  form_id    = 0x00022897   # Vault chair
+  forward    = 64.0
+  rot_offset = -1.5708
+  z_offset   = 34.65
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 55.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter_main"  # content list to draw items from
+  count   = 1                # how many items to place
+  z_offset = 55.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x000918B1      # Generic Console 2
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x000918B2      # Generic Console 3
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x000918B6      # Generic Console Stack 1
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+[[items]]
+list      = "furniture_tech_clean"
+form_id   = 0x0001F534      # Tape Machine (Clean)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_tech_dirty -------
+
+[[items]]
+list      = "furniture_tech_dirty"
+form_id   = 0x000734FB      # Console 2 (Dirty)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_tech_dirty"
+form_id   = 0x000A7B04      # Server Rack (Dirty)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 0.0]
+
+[[items]]
+list      = "furniture_tech_dirty"
+form_id   = 0x0002FDDF      # Desk Wood (Dirty)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+  [[items.companions]]
+  form_id    = 0x00042646   # Vault chair Dirty
+  forward    = 64.0
+  rot_offset = -1.5708
+  z_offset   = 34.65
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter"   # content list to draw items from
+  count   = 5                # how many items to place
+  z_offset = 55.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+  [[items.surface_scatter]]
+  list    = "desk_clutter_main"  # content list to draw items from
+  count   = 1                # how many items to place
+  z_offset = 55.0            # height of the desk surface above the floor
+  x_range  = 48.0            # half-width of scatter zone (along the wall)
+  y_range  = 24.0            # half-depth of scatter zone (into the room)
+
+[[items]]
+list      = "furniture_tech_dirty"
+form_id   = 0x000A6A5F      # Generic Console 2 (Dirty)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+[[items]]
+list      = "furniture_tech_dirty"
+form_id   = 0x000A6A5E      # Generic Console 3 (Dirty)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 3.14159]
+
+[[items]]
+list      = "furniture_tech_dirty"
+form_id   = 0x000A6A5A      # Generic Console Stack 1 (Dirty)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+[[items]]
+list      = "furniture_tech_dirty"
+form_id   = 0x00042654      # Tape Machine (Dirty)
+placement = "anywhere"
+jitter    = 0.0
+wall_depth = 150
+base_rot  = [0.0, 0.0, 0.0]
+
+# -- furniture_trash -------
+
+[[items]]
+list      = "furniture_trash"
+form_id   = 0x0001CCCD      # Garbage Can
+placement = "corners"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_vault_bedroom_clean -------
+
+[[items]]
+list      = "furniture_vault_bedroom_clean"
+form_id   = 0x00097C1B      # Vault Dresser (clean)
+placement = "walls"
+jitter    = 0.0
+wall_offset = 88
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_vault_bedroom_clean"
+form_id   = 0x00097BC5      # Vault Bed (clean)
+placement = "walls"
+jitter    = 0.0
+z_offset  = 37.33
+base_rot  = [0.0, 0.0, 0.0]
+
+[[items]]
+list      = "furniture_vault_bedroom_clean"
+form_id   = 0x000389A2      # Vault Locker (clean)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_vault_bedroom_dirty -------
+
+[[items]]
+list      = "furniture_vault_bedroom_dirty"
+form_id   = 0x00115CD3      # Vault Dresser (dirty)
+placement = "walls"
+jitter    = 0.0
+wall_offset = 88
+base_rot  = [0.0, 0.0, -1.5708]
+
+[[items]]
+list      = "furniture_vault_bedroom_dirty"
+form_id   = 0x00099F1E      # Vault Bed (dirty)
+placement = "walls"
+z_offset  = 37.33
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 0.0]
+
+[[items]]
+list      = "furniture_vault_bedroom_dirty"
+form_id   = 0x00058715      # Vault Locker (dirty)
+placement = "walls"
+jitter    = 0.0
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_vault_power_clean -------
+
+[[items]]
+list      = "furniture_vault_power_clean"
+form_id   = 0x00022D4A      # Vault Transformer (clean)
+placement = "interior"
+jitter    = 0.0
+z_offset  = -46.55
+base_rot  = [0.0, 0.0, 1.5708]
+
+# -- furniture_vault_power_dirty -------
+
+[[items]]
+list      = "furniture_vault_power_dirty"
+form_id   = 0x0004064A      # Vault Transformer (dirty)
+placement = "interior"
+jitter    = 0.0
+z_offset  = -46.55
+base_rot  = [0.0, 0.0, 1.5708]
+
+
+# ── Wall Decorations (imported) ─────────────────────────────────────────────
+
+
+# -- wall_clock_home -------
+
+[[items]]
+list       = "wall_clock_home"
+form_id    = 0x000941BD      # Starburst clock
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- wall_clock_nuka -------
+
+[[items]]
+list       = "wall_clock_nuka"
+form_id    = 0x0002AFA7      # Nuka Clock
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- wall_clock_office -------
+
+[[items]]
+list       = "wall_clock_office"
+form_id    = 0x0001F0C5      # Clock
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+[[items]]
+list       = "wall_clock_office"
+form_id    = 0x000E8EBF      # Train Station Clock
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- wall_medical -------
+
+[[items]]
+list       = "wall_medical"
+form_id    = 0x000CCF91      # First Aid Kit
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
+
+# -- wall_school -------
+
+[[items]]
+list       = "wall_school"
+form_id    = 0x000194B7      # Chalkboard Wall
+placement  = "walls"
+jitter     = 0.0
+z_offset   = 72.0
+wall_depth = 112
