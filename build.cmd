@@ -1,2 +1,2 @@
 @echo off
-cargo build
+cargo build --release

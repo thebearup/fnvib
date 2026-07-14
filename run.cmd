@@ -1,2 +1,2 @@
 @echo off
-target\debug\fnvib.exe
+target\release\fnvib.exe

@@ -22,6 +22,8 @@ Fallout: New Vegas Interior Builder (FNVIB) is a tool to simplify some aspects o
 * Export a .esp file with a cell matching the specifications
 * Edit the .esp in the GECK or use zMerge to combine it with other files
 
+![Logo](media/Example.png)
+
 ## Limitations
 
 * Not every kit has all of the necessary pieces.

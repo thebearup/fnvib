@@ -47,6 +47,7 @@ impl PieceMask {
     pub fn wall_only() -> Self { Self { interior: false, wall: true, corner: false } }
     pub fn interior_only() -> Self { Self { interior: true, wall: false, corner: false } }
     pub fn corner_only() -> Self { Self { interior: false, wall: false, corner: true } }
+    pub fn wall_and_corner() -> Self { Self { interior: false, wall: true, corner: true } }
 
     pub fn allows(&self, class: PieceClass) -> bool {
         match class {
@@ -126,6 +127,10 @@ enum PlacementToml {
     Interior,
     /// Corner pieces only.
     Corners,
+    /// Both straight wall and corner pieces; item auto-rotates to face inward,
+    /// using the corner's backing wall for orientation.
+    #[serde(rename = "walls_and_corners")]
+    WallsAndCorners,
 }
 
 #[derive(Deserialize)]
@@ -278,10 +283,11 @@ pub struct ContentData {
     pub kits: HashMap<String, KitData>,
     /// Named item pools used for furniture, clutter, lights, etc.
     pub lists: HashMap<String, Vec<ContentItem>>,
-    /// UI category for each named list: "furniture", "floor_clutter",
-    /// "surface_clutter", "wall_decorations", or "lights".
-    /// Lists absent from this map (or with an empty category) appear in all sections.
-    pub list_categories: HashMap<String, String>,
+    /// UI categories each named list belongs to: any of "furniture", "floor_clutter",
+    /// "surface_clutter", "wall_decorations", "lights". A list may belong to several
+    /// (e.g. a list can be both floor_clutter and surface_clutter).
+    /// Lists absent from this map (or mapped to an empty vec) appear in all sections.
+    pub list_categories: HashMap<String, Vec<String>>,
 }
 
 /// Load a `content_lists.toml` file and return kit definitions and item pools.
@@ -345,10 +351,11 @@ pub fn load(path: &Path) -> std::io::Result<ContentData> {
     let mut lists: HashMap<String, Vec<ContentItem>> = HashMap::new();
     for rec in file.items {
         let (allowed, align_to_wall) = match rec.placement {
-            PlacementToml::Anywhere  => (PieceMask::anywhere(),      false),
-            PlacementToml::Walls     => (PieceMask::wall_only(),     true),
-            PlacementToml::Interior  => (PieceMask::interior_only(), false),
-            PlacementToml::Corners   => (PieceMask::corner_only(),   true),
+            PlacementToml::Anywhere        => (PieceMask::anywhere(),      false),
+            PlacementToml::Walls           => (PieceMask::wall_only(),     true),
+            PlacementToml::Interior        => (PieceMask::interior_only(), false),
+            PlacementToml::Corners         => (PieceMask::corner_only(),   true),
+            PlacementToml::WallsAndCorners => (PieceMask::wall_and_corner(), true),
         };
 
         let item = ContentItem {
@@ -385,11 +392,12 @@ pub fn load(path: &Path) -> std::io::Result<ContentData> {
         lists.entry(rec.list).or_default().push(item);
     }
 
-    // Invert categories (category → [lists]) into list_categories (list → category).
-    let mut list_categories: HashMap<String, String> = HashMap::new();
+    // Invert categories (category → [lists]) into list_categories (list → [categories]).
+    // A list can appear under more than one category, so accumulate rather than overwrite.
+    let mut list_categories: HashMap<String, Vec<String>> = HashMap::new();
     for (category, names) in file.categories {
         for name in names {
-            list_categories.insert(name, category.clone());
+            list_categories.entry(name).or_default().push(category.clone());
         }
     }
 

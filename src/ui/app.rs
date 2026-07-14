@@ -70,9 +70,13 @@ impl FnvibApp {
         let mut all_list_names: Vec<String> = content.lists.keys().cloned().collect();
         all_list_names.sort();
         for name in &all_list_names {
-            match content.list_categories.get(name).map(|s| s.as_str()) {
-                Some(cat) if !cat.is_empty() => {
-                    lists_by_cat.entry(cat.to_string()).or_default().push(name.clone());
+            match content.list_categories.get(name) {
+                Some(cats) if !cats.is_empty() => {
+                    for cat in cats {
+                        if let Some(bucket) = lists_by_cat.get_mut(cat.as_str()) {
+                            bucket.push(name.clone());
+                        }
+                    }
                 }
                 _ => {
                     for &c in ALL_CATS {
@@ -373,13 +377,16 @@ impl FnvibApp {
                 ui.colored_label(Color32::from_rgb(90, 210, 170), "Type: Corridor");
             }
 
-            ComboBox::from_label("Kit")
-                .selected_text(&room.kit)
-                .show_ui(ui, |ui| {
-                    for k in &kit_names {
-                        ui.selectable_value(&mut room.kit, k.clone(), k);
-                    }
-                });
+            ui.horizontal(|ui| {
+                ui.label("Kit");
+                ComboBox::from_id_source("room_kit")
+                    .selected_text(&room.kit)
+                    .show_ui(ui, |ui| {
+                        for k in &kit_names {
+                            ui.selectable_value(&mut room.kit, k.clone(), k);
+                        }
+                    });
+            });
 
             ui.separator();
             show_list_section(ui, "Furniture", &mut room.furniture, &furniture_lists);
